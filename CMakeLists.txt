@@ -91,8 +91,17 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 	if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 		# Normalize backslashes from %LOCALAPPDATA% to forward slashes so the path is a
 		# valid CMake/CPack string (avoids "Invalid escape sequence" warnings).
-		#file(TO_CMAKE_PATH "$ENV{LOCALAPPDATA}/Open Ephys" XDAQ_NP_WIN_INSTALL_PREFIX)
+
+		message(STATUS "ENV LOCALAPPDATA = $ENV{LOCALAPPDATA}")
+		message(STATUS "ENV USERPROFILE = $ENV{USERPROFILE}")
+		if(DEFINED ENV{LOCALAPPDATA})
+    		file(TO_CMAKE_PATH "$ENV{LOCALAPPDATA}/Open Ephys" XDAQ_NP_WIN_INSTALL_PREFIX)
+		else()
+   			file(TO_CMAKE_PATH "$ENV{USERPROFILE}/AppData/Local/Open Ephys" XDAQ_NP_WIN_INSTALL_PREFIX)
+		endif()
 		set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${XDAQ_NP_WIN_INSTALL_PREFIX}")
+		message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+		message(STATUS "Initialized to default = ${CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT}")
 		set(PLUGIN_INSTALL_DIR plugins-api10 CACHE STRING "Plugin installation directory" FORCE)
 		set(SHARED_INSTALL_DIR shared-api10 CACHE STRING "Shared installation directory" FORCE)
 	elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
