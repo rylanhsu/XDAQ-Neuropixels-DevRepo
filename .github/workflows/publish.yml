@@ -120,6 +120,7 @@ jobs:
         defaults:
             run:
                 shell: bash
+        needs: build
 
         steps:
             - name: Checkout code
@@ -274,6 +275,7 @@ jobs:
         defaults:
             run:
                 shell: bash
+        needs: build
 
         steps:
             - name: Checkout code
