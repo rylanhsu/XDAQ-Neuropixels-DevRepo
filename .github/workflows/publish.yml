@@ -173,7 +173,12 @@ jobs:
                   powershell Expand-Archive -Path "dist/$env:WIN_ZIP" -DestinationPath 'dist/windows-repack' -Force
                   Remove-Item "dist/$env:WIN_ZIP"
                   powershell Compress-Archive -Path 'dist/windows-repack/*' -DestinationPath "dist/$env:WIN_ZIP" -Force
-                  List-Archive -Path "dist/$env:WIN_ZIP"
+                  Add-Type -AssemblyName System.IO.Compression.FileSystem
+                  # Show the zip file information
+    	          $zipPath = "dist/$env:WIN_ZIP"
+                  $zip = [System.IO.Compression.ZipFile]::OpenRead($zipPath)
+                  $zip.Entries | Select-Object -ExpandProperty FullName
+                  $zip.Dispose()
                   Remove-Item 'dist/windows-repack' -Recurse -Force
 
             - name: Upload to Artifactory
