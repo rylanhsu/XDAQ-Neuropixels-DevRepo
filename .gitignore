@@ -15,6 +15,7 @@ Builds/*/*
 .DS_Store
 
 .vscode
+.idea
 
 /Build
 /build*

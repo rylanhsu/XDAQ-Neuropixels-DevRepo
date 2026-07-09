@@ -55,6 +55,6 @@ FARPROC WINAPI delayLoadHook(unsigned reason, PDelayLoadInfo info)
 
 } // namespace
 
-extern "C" PfnDliHook __pfnDliNotifyHook2 = delayLoadHook;
+extern "C" const PfnDliHook __pfnDliNotifyHook2 = delayLoadHook;
 
 #endif // _WIN32
