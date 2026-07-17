@@ -66,9 +66,9 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 		${GUI_BASE_DIR}/Build/${CONFIGURATION_FOLDER}/open-ephys.lib
 	)
 
-	# Delay-load xdaq_npapi.dll (see DELAY_LOAD_RELATIVE_DIR below, set once
-	# SHARED_INSTALL_DIR/PLUGIN_INSTALL_DIR reach their final values) instead of
-	# relying on the Open Ephys host's DLL search path. See Source/DelayLoadHook.cpp.
+	# Delay-load xdaq_npapi.dll from the shared directory that sits next to the
+	# plugins directory (resolved at runtime, since the host may suffix both with
+	# the API version, e.g. plugins-api10/shared-api10). See Source/DelayLoadHook.cpp.
 	target_compile_definitions(${PLUGIN_NAME} PRIVATE "DELAY_LOAD_DLL_NAME=\"xdaq_npapi.dll\"")
 	target_link_options(${PLUGIN_NAME} PRIVATE "/DELAYLOAD:xdaq_npapi.dll")
 	target_link_libraries(${PLUGIN_NAME} PRIVATE delayimp.lib)
@@ -115,13 +115,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 		set(PLUGIN_INSTALL_DIR ${CONFIGURATION_FOLDER}/plugins CACHE STRING "Plugin installation directory" FORCE)
 		set(SHARED_INSTALL_DIR ${CONFIGURATION_FOLDER}/shared CACHE STRING "Shared installation directory" FORCE)
 	endif()
-endif()
-
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	# Resolve xdaq_npapi.dll from shared/
-	target_compile_definitions(${PLUGIN_NAME} PRIVATE
-		"DELAY_LOAD_RELATIVE_DIR=L\"../${SHARED_INSTALL_DIR}\""
-	)
 endif()
 
 install(TARGETS ${PLUGIN_NAME}
