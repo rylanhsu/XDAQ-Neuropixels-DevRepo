@@ -13,7 +13,7 @@
 #include <string>
 
 // Directory containing the dependency, relative to this module's own
-// directory (e.g. L"../shared/XDAQ-Neuropixels"). Defaults to the same directory.
+// directory (e.g. L"../shared"). Defaults to the same directory.
 #ifndef DELAY_LOAD_RELATIVE_DIR
 #define DELAY_LOAD_RELATIVE_DIR L"."
 #endif

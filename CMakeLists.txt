@@ -118,9 +118,9 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	# Resolve xdaq_npapi.dll from shared/<PLUGIN_NAME>/
+	# Resolve xdaq_npapi.dll from shared/
 	target_compile_definitions(${PLUGIN_NAME} PRIVATE
-		"DELAY_LOAD_RELATIVE_DIR=L\"../${SHARED_INSTALL_DIR}/${PLUGIN_NAME}\""
+		"DELAY_LOAD_RELATIVE_DIR=L\"../${SHARED_INSTALL_DIR}\""
 	)
 endif()
 
@@ -151,8 +151,8 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 	)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	libxdaqnp_install_runtime(
-		PLUGIN_DEST  ${SHARED_INSTALL_DIR}/${PLUGIN_NAME}
-		SHARED_DEST  ${SHARED_INSTALL_DIR}/${PLUGIN_NAME}
+		PLUGIN_DEST  ${SHARED_INSTALL_DIR}
+		SHARED_DEST  ${SHARED_INSTALL_DIR}
 		MANAGERS_DEST ${SHARED_INSTALL_DIR}/${PLUGIN_NAME}/device_managers
 	)
 endif()
