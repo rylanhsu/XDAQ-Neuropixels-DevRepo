@@ -72,21 +72,25 @@ FARPROC WINAPI delayLoadHook(unsigned reason, PDelayLoadInfo info)
 
     std::wstring dllName(info->szDll, info->szDll + std::strlen(info->szDll));
 
+    // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR alone restricts the search for this
+    // DLL's own dependencies (e.g. xdaq_device.dll) to its own directory and
+    // excludes System32, so the VC++ runtime DLLs it also depends on
+    // (MSVCP140.dll, VCRUNTIME140*.dll) would never be found. Combine it with
+    // LOAD_LIBRARY_SEARCH_DEFAULT_DIRS to search both.
+    const DWORD searchFlags = LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
+
     // <root>/shared<suffix>/<dll>, derived from <root>/plugins<suffix>/ where
     // this module lives.
     if (const std::wstring sharedDir = sharedDirectory(); !sharedDir.empty()) {
         const std::wstring fullPath = sharedDir + L"/" + dllName;
-        if (HMODULE loaded =
-                LoadLibraryExW(fullPath.c_str(), nullptr, LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR))
+        if (HMODULE loaded = LoadLibraryExW(fullPath.c_str(), nullptr, searchFlags))
             return reinterpret_cast<FARPROC>(loaded);
     }
 
     // Fall back to this module's own directory (e.g. a developer build where
     // everything sits side by side).
     const std::wstring fallback = moduleDirectory() + L"/" + dllName;
-    return reinterpret_cast<FARPROC>(
-        LoadLibraryExW(fallback.c_str(), nullptr, LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR)
-    );
+    return reinterpret_cast<FARPROC>(LoadLibraryExW(fallback.c_str(), nullptr, searchFlags));
 }
 
 // Without a failure hook, the delay-load runtime raises a structured
