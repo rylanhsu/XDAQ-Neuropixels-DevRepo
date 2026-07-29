@@ -65,13 +65,6 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	target_link_libraries(${PLUGIN_NAME} PRIVATE
 		${GUI_BASE_DIR}/Build/${CONFIGURATION_FOLDER}/open-ephys.lib
 	)
-
-	# Delay-load xdaq_npapi.dll from the shared directory that sits next to the
-	# plugins directory (resolved at runtime, since the host may suffix both with
-	# the API version, e.g. plugins-api10/shared-api10). See Source/DelayLoadHook.cpp.
-	target_compile_definitions(${PLUGIN_NAME} PRIVATE "DELAY_LOAD_DLL_NAME=\"xdaq_npapi.dll\"")
-	target_link_options(${PLUGIN_NAME} PRIVATE "/DELAYLOAD:xdaq_npapi.dll")
-	target_link_libraries(${PLUGIN_NAME} PRIVATE delayimp.lib)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 	target_link_libraries(${PLUGIN_NAME} PRIVATE
 		GL X11 Xext Xinerama asound dl freetype pthread rt
